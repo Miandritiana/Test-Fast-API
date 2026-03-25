@@ -1,0 +1,14 @@
+fastapi==0.135.2
+uvicorn==0.42.0
+alembic==1.17.2
+black==25.11.0
+flake8==7.3.0
+email-validator==2.3.0
+psycopg2==2.9.11
+psycopg2-binary==2.9.11
+python-dateutil==2.9.0.post0
+python-dotenv==1.2.1
+python-multipart==0.0.20
+supabase==2.24.0
+supabase-auth==2.24.0
+supabase-functions==2.24.0
