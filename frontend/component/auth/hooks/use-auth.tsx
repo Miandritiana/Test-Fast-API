@@ -11,7 +11,6 @@ import {
   ProfilesResponse,
   SignUpRequest
 } from '@/types/profiles';
-import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 
 export function useAuth() {
@@ -139,6 +138,21 @@ export function useAuth() {
         },
     });
 
+    const { data: profiles, isLoading: isLoadingProfiles } = useQuery<ProfilesResponse[]>(
+        {
+            queryKey: ['profiles'],
+            queryFn: async () => {
+                const token = Cookies.get('auth_token');
+                const response = await axios.get<ProfilesResponse[]>('/api/profiles', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                return response.data;
+            },
+        }
+    );
+
     return {
         SignInWithPassword,
         isSignInWithPassword,
@@ -147,5 +161,7 @@ export function useAuth() {
         error,
         user,
         SignOut,
+        profiles,
+        isLoadingProfiles,
     };
 }

@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         {
           source: "/api/auth/sign_in",
           destination: `${process.env.NEXT_PUBLIC_API_URL}/auth/sign_in_with_password`,
+        },
+        {
+          source: "/api/profiles",
+          destination: `${process.env.NEXT_PUBLIC_API_URL}/profiles`,
         }
       ];
     },
