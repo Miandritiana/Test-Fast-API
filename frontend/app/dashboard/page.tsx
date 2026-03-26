@@ -6,7 +6,7 @@ import { useAuth } from '@/component/auth/hooks/use-auth';
 
 
 export default function Dashboard() {
-  const { SignOut, profiles, isLoadingProfiles } = useAuth();
+  const { SignOut, profiles, isLoadingProfiles, isProfilesForbidden } = useAuth();
   const [time, setTime] = useState('');
   const [date, setDate] = useState('');
   const [glitch, setGlitch] = useState(false);
@@ -86,7 +86,14 @@ export default function Dashboard() {
                       </td>
                     </tr>
                   ))}
-                  {(!profiles || profiles.length === 0) && (
+                  {isProfilesForbidden && (
+                    <tr>
+                      <td colSpan={4} style={{ textAlign: 'center', padding: '20px', color: '#ff4444' }}>
+                        ACCESS_DENIED: INSUFFICIENT_PRIVILEGES
+                      </td>
+                    </tr>
+                  )}
+                  {(!profiles || profiles.length === 0) && !isProfilesForbidden && (
                     <tr>
                       <td colSpan={4} style={{ textAlign: 'center', padding: '20px' }}>NO_PROFILES_FOUND</td>
                     </tr>

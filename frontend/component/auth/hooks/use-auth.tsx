@@ -138,7 +138,7 @@ export function useAuth() {
         },
     });
 
-    const { data: profiles, isLoading: isLoadingProfiles } = useQuery<ProfilesResponse[]>(
+    const { data: profiles, isLoading: isLoadingProfiles, error: profilesError } = useQuery<ProfilesResponse[], AxiosError<{ detail: string }>>(
         {
             queryKey: ['profiles'],
             queryFn: async () => {
@@ -150,8 +150,12 @@ export function useAuth() {
                 });
                 return response.data;
             },
+            retry: false, // Don't retry if we get a 403
         }
     );
+
+    const isProfilesForbidden = profilesError?.response?.status === 403 && 
+                                profilesError?.response?.data?.detail === "The user does not have enough privileges";
 
     return {
         SignInWithPassword,
@@ -163,5 +167,6 @@ export function useAuth() {
         SignOut,
         profiles,
         isLoadingProfiles,
+        isProfilesForbidden,
     };
 }
