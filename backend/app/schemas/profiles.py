@@ -35,6 +35,7 @@ class SignInRequest(BaseModel):
 class SignInResponse(BaseModel):
     access_token: str
     refresh_token: Optional[str] = None
+    user: SignUpResponse
 
 class ProfilesResponse(Profiles):
     id: str
