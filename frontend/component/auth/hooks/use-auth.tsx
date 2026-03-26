@@ -32,8 +32,8 @@ export function useAuth() {
         Cookies.remove('refresh_token', { path: '/' });
         Cookies.remove('user_info', { path: '/' });
         if (typeof window !== 'undefined') {
-        localStorage.clear();
-        sessionStorage.clear();
+            localStorage.clear();
+            sessionStorage.clear();
         }
         router.push('/sign-in');
     };
@@ -44,7 +44,7 @@ export function useAuth() {
         mutationKey: ['SignInWithPassword'],
         mutationFn: async (login: SignInRequest) => {
             const response = await axios.post<SignInResponse>(
-            `/api/auth/signin`,
+            `/api/auth/sign_in`,
             login
             );
             return { data: response.data as SignInResponse, password: login.password, email: login.email };
@@ -112,36 +112,36 @@ export function useAuth() {
         },
         onSuccess: async ({ email, password }) => {
         try {
-            const signInResponse = await axios.post<SignInResponse>(`/api/auth/signin`, {
-            email,
-            password,
+            const signInResponse = await axios.post<SignInResponse>(`/api/auth/sign_in`, {
+                email,
+                password,
             });
 
             const cookieOptions = {
-            expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-            path: '/',
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Lax' as const,
+                expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+                path: '/',
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Lax' as const,
             };
 
             Cookies.set('auth_token', signInResponse.data.access_token, cookieOptions);
 
             if (signInResponse.data.refresh_token) {
-            Cookies.set('refresh_token', signInResponse.data.refresh_token, cookieOptions);
+                Cookies.set('refresh_token', signInResponse.data.refresh_token, cookieOptions);
             }
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const decoded = jwtDecode<any>(signInResponse.data.access_token);
             const userInfo: ProfilesResponse = {
-            id: decoded.sub,
-            email: decoded.email ?? null,
-            avatar_url:
-                decoded.user_metadata?.avatar_url ??
-                decoded.user_metadata?.avatar ??
-                null,
-            first_name: decoded.user_metadata?.first_name ?? null,
-            last_name: decoded.user_metadata?.last_name ?? null,
-            role: decoded.user_metadata?.role ?? null,
+                id: decoded.sub,
+                email: decoded.email ?? null,
+                avatar_url:
+                    decoded.user_metadata?.avatar_url ??
+                    decoded.user_metadata?.avatar ??
+                    null,
+                first_name: decoded.user_metadata?.first_name ?? null,
+                last_name: decoded.user_metadata?.last_name ?? null,
+                role: decoded.user_metadata?.role ?? null,
             };
 
             Cookies.set('user_info', JSON.stringify(userInfo), cookieOptions);
