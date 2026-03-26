@@ -1,10 +1,7 @@
 from datetime import datetime
-import enum
 from typing import Optional
-from uuid import UUID
 from pydantic import BaseModel, EmailStr
 
-from app.db.models import RoleUser
 
 class Profiles(BaseModel):
     first_name: Optional[str] = None
@@ -14,8 +11,10 @@ class Profiles(BaseModel):
     avatar_url: Optional[str] = None
     role: Optional[str] = "user"
 
+
 class SignUpRequest(Profiles):
     pass
+
 
 class SignUpResponse(BaseModel):
     id: str
@@ -25,17 +24,21 @@ class SignUpResponse(BaseModel):
     avatar_url: Optional[str] = None
     role: Optional[str] = None
 
+
 class ProfilesAuth(SignUpResponse):
     pass
+
 
 class SignInRequest(BaseModel):
     email: EmailStr
     password: str
 
+
 class SignInResponse(BaseModel):
     access_token: str
     refresh_token: Optional[str] = None
     user: SignUpResponse
+
 
 class ProfilesResponse(Profiles):
     id: str

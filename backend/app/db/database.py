@@ -10,6 +10,7 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_API_KEY = os.getenv("SUPABASE_API_KEY")
 SUPABASE_SECRET_KEY = os.getenv("SUPABASE_SECRET_KEY")
 
+
 def get_supabase_client() -> Client:
     """Client Supabase avec clé anonyme (opérations utilisateur)."""
     return create_client(SUPABASE_URL, SUPABASE_API_KEY)

@@ -1,39 +1,35 @@
 """
-Modèles SQLAlchemy — utilisés UNIQUEMENT pour Alembic (génération de migrations).
-:warning: Ne JAMAIS utiliser ces modèles pour des requêtes. Utiliser le SDK Supabase.
+Modèles SQLAlchemy — UNIQUEMENT pour Alembic (migrations).
+:warning: Ne JAMAIS utiliser ces modèles pour des requêtes.
 """
 
 import uuid
 import enum
 from sqlalchemy import (
-    Boolean,
     CheckConstraint,
     Column,
     Enum,
-    Date,
     DateTime,
-    ForeignKey,
     Index,
-    Integer,
-    Numeric,
     String,
     Text,
-    UniqueConstraint,
     text,
 )
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import DeclarativeBase
 
 
-
 class Base(DeclarativeBase):
     """Classe de base pour tous les modèles SQLAlchemy."""
+
     pass
+
 
 class RoleUser(enum.Enum):
     admin = "admin"
     superadmin = "superadmin"
     member = "member"
+
 
 class Profile(Base):
     """Table profiles liée à auth.users via trigger Supabase."""

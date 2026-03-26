@@ -1,4 +1,3 @@
-from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from app.services.auth.auth import AuthService
 from app.schemas.profiles import (
@@ -10,8 +9,10 @@ from app.schemas.profiles import (
 
 router = APIRouter()
 
+
 def get_auth_service():
     return AuthService()
+
 
 @router.post("/sign_up", response_model=SignUpResponse)
 async def create_profiles(
