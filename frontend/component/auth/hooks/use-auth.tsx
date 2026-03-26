@@ -67,19 +67,8 @@ export function useAuth() {
             });
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const decoded = jwtDecode<any>(data.access_token);
-            const userInfo: ProfilesResponse = {
-            id: decoded.sub,
-            email: decoded.email ?? null,
-            avatar_url:
-                decoded.user_metadata?.avatar_url ??
-                decoded.user_metadata.avatar ??
-                null,
-            first_name: decoded.user_metadata?.first_name ?? null,
-            last_name: decoded.user_metadata?.last_name ?? null,
-            role: decoded.user_metadata?.role ?? null,
-            };
+            // Use user info from response instead of decoding potentially stale JWT
+            const userInfo: ProfilesResponse = data.user;
             
             Cookies.set('user_info', JSON.stringify(userInfo), {
                 expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
@@ -130,19 +119,8 @@ export function useAuth() {
                 Cookies.set('refresh_token', signInResponse.data.refresh_token, cookieOptions);
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const decoded = jwtDecode<any>(signInResponse.data.access_token);
-            const userInfo: ProfilesResponse = {
-                id: decoded.sub,
-                email: decoded.email ?? null,
-                avatar_url:
-                    decoded.user_metadata?.avatar_url ??
-                    decoded.user_metadata?.avatar ??
-                    null,
-                first_name: decoded.user_metadata?.first_name ?? null,
-                last_name: decoded.user_metadata?.last_name ?? null,
-                role: decoded.user_metadata?.role ?? null,
-            };
+            // Use user info from response instead of decoding potentially stale JWT
+            const userInfo: ProfilesResponse = signInResponse.data.user;
 
             Cookies.set('user_info', JSON.stringify(userInfo), cookieOptions);
 

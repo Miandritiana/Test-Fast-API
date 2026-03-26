@@ -8,6 +8,7 @@ export interface SignInRequest {
 export interface SignInResponse {
   access_token: string
   refresh_token?: string
+  user: ProfilesResponse
 }
 
 export interface Profiles {

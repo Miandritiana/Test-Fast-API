@@ -65,9 +65,25 @@ class AuthService:
             response = self.supabase.auth.sign_in_with_password(
                 {"email": data.email, "password": data.password}
             )
+            
+            user = response.user
+            # Fetch profile from DB to get the correct role
+            profile_response = self.supabase_admin.table("profiles").select("*").eq("id", user.id).single().execute()
+            profile_data = profile_response.data if profile_response else {}
+            
+            user_info = SignUpResponse(
+                id=user.id,
+                first_name=profile_data.get("first_name") or user.user_metadata.get("first_name"),
+                last_name=profile_data.get("last_name") or user.user_metadata.get("last_name"),
+                email=user.email,
+                avatar_url=profile_data.get("avatar_url") or user.user_metadata.get("avatar_url"),
+                role=profile_data.get("role") or user.user_metadata.get("role"),
+            )
+            
             return SignInResponse(
                 access_token=response.session.access_token,
                 refresh_token=response.session.refresh_token,
+                user=user_info
             )
         except Exception as e:
             raise HTTPException(
@@ -79,17 +95,22 @@ class AuthService:
         try:
             response = self.supabase.auth.get_user(token)
             user = response.user
+            
+            # Fetch additional info from profiles table using admin client to bypass RLS
+            profile_response = self.supabase_admin.table("profiles").select("*").eq("id", user.id).single().execute()
+            profile_data = profile_response.data if profile_response else {}
+            
             return SignUpResponse(
                 id=user.id,
-                first_name=user.user_metadata.get("first_name"),
-                last_name=user.user_metadata.get("last_name"),
+                first_name=profile_data.get("first_name") or user.user_metadata.get("first_name"),
+                last_name=profile_data.get("last_name") or user.user_metadata.get("last_name"),
                 email=user.email,
-                avatar_url=user.user_metadata.get("avatar_url"),
-                role=user.user_metadata.get("role"),
+                avatar_url=profile_data.get("avatar_url") or user.user_metadata.get("avatar_url"),
+                role=profile_data.get("role") or user.user_metadata.get("role"),
             )
         except Exception as e:
             raise HTTPException(
-                status_code=400,
+                status_code=401,
                 detail=f"Error: {str(e)}",
             )
 
