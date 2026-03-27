@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/component/auth/hooks/use-auth';
 
-
-
 export default function Dashboard() {
   const { SignOut, profiles, isLoadingProfiles, isProfilesForbidden } = useAuth();
   const [time, setTime] = useState('');
@@ -36,13 +34,8 @@ export default function Dashboard() {
         <div className="noise" />
 
         {/* TOPBAR */}
-        <header className="topbar">
-          <div className="topbar-left">
-            <div>
-              <div className="logo">ATYPIQUE_</div>
-              <div className="logo-sub">KINETIC_BRUTALIST_INFRASTRUCTURE</div>
-            </div>
-          </div>
+        <header className="topbar flex flex-row justify-between">
+          <div></div>
           <div className="topbar-right">
             <div className="live-indicator">
               <div className="live-dot" />
